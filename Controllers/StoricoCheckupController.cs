@@ -30,25 +30,22 @@ namespace IncarichiCUServer.Controllers
             return result;
         }
         [HttpGet("GetAllegatiData")]
-        public async Task<FileContentResult> GetListAllegatiData()
+        public async Task<IActionResult> GetListAllegatiData(int rientro)
         {
-            string storedProc = "exec Net_ciodueit.dbo.[SP_StoricoCheckup_GetAllegatiData] @keyord = '201376070010', @haccp = 0, @contatore = 78079, @rientro = 0";
+            string storedProc = $"exec Net_ciodueit.dbo.[SP_StoricoCheckup_GetAllegatiData] @keyord = '201376070010', @haccp = 0, @contatore = 78079, @rientro = " + rientro;
             var result = _context.SP_StoricoCheckup_GetAllegatiData.FromSqlRaw(storedProc).AsEnumerable().FirstOrDefault();
 
+            // Definisci il nome del file
+            string fileName = "FileTest.rar";
+
             // Restituisci i dati binari come file
-            var test = File(result.Doc, "application/octet-stream").ContentType;
-            return File(result.Doc, test);
+            return new FileContentResult(result.Doc, "application/x-rar-compressed")
+            {
+                FileDownloadName = fileName
+            };
+        }
 
 
-        }
-        //da rivedere
-        [HttpGet("GetListAllegatiByKeyordHaccp")]
-        public async Task<IEnumerable<SP_StoricoCheckup_GetAllegatiData>> GetListAllegatiByKeyordHaccp(int keyord, int haccp)
-        {
-            string StoredProc = "exec Net_ciodueit.dbo.[SP_StoricoCheckup_GetAllegatiData] @keyord = '201376070010', @haccp = 0, @contatore = 78079, @rientro = 0";
-            var result = await _context.SP_StoricoCheckup_GetAllegatiData.FromSqlRaw(StoredProc).ToListAsync();
-            return result;
-        }
 
 
     }
