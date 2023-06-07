@@ -30,9 +30,9 @@ namespace IncarichiCUServer.Controllers
             return result;
         }
         [HttpGet("GetAllegatiData")]
-        public async Task<IActionResult> GetListAllegatiData(int rientro)
+        public async Task<IActionResult> GetListAllegatiData(int rientro, string keyord, int haccp)
         {
-            string storedProc = $"exec Net_ciodueit.dbo.[SP_StoricoCheckup_GetAllegatiData] @keyord = '201376070010', @haccp = 0, @contatore = 78079, @rientro = " + rientro;
+            string storedProc = $"exec Net_ciodueit.dbo.[SP_StoricoCheckup_GetAllegatiData] @keyord = '{keyord}', @haccp = {haccp}, @contatore = 78079, @rientro = " + rientro;
             var result = _context.SP_StoricoCheckup_GetAllegatiData.FromSqlRaw(storedProc).AsEnumerable().FirstOrDefault();
 
             // Definisci il nome del file
@@ -44,10 +44,6 @@ namespace IncarichiCUServer.Controllers
                 FileDownloadName = fileName
             };
         }
-
-
-
-
     }
 
 }
