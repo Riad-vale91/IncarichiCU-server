@@ -30,15 +30,12 @@ namespace IncarichiCUServer.Controllers
             return result;
         }
         [HttpGet("GetAllegatiData")]
-        public async Task<IActionResult> GetListAllegatiData(int rientro, string keyord, int haccp)
+        public async Task<IActionResult> GetListAllegatiData(int rientro, string keyord, int haccp, int contatore)
         {
-            string storedProc = $"exec Net_ciodueit.dbo.[SP_StoricoCheckup_GetAllegatiData] @keyord = '{keyord}', @haccp = {haccp}, @contatore = 78079, @rientro = " + rientro;
+            string storedProc = $"exec Net_ciodueit.dbo.[SP_StoricoCheckup_GetAllegatiData] @keyord = '{keyord}', @haccp = {haccp}, @contatore = " + contatore + ", @rientro = " + rientro;
             var result = _context.SP_StoricoCheckup_GetAllegatiData.FromSqlRaw(storedProc).AsEnumerable().FirstOrDefault();
 
-            // Definisci il nome del file
             string fileName = "FileTest.rar";
-
-            // Restituisci i dati binari come file
             return new FileContentResult(result.Doc, "application/x-rar-compressed")
             {
                 FileDownloadName = fileName
